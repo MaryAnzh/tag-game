@@ -1,0 +1,25 @@
+.header-list {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    &__item {
+        padding: 10px 10px;
+        color: white;
+        border-radius: 4px;
+        background: black;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: .3s;
+
+        &:hover {
+            opacity: 0.7;
+        }
+
+        &:active {
+            opacity: 0.5;
+
+        }
+
+    }
+}

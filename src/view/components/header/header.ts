@@ -2,17 +2,18 @@ import { PageRenderer } from '../../../model/page-renderer.model';
 
 class Header implements PageRenderer {
   public navList: string[] = [
-    'About',
-    'Map',
-    'Zoos',
-    'Donate',
-    'Contact us'
+    'shuffle and start',
+    'stop',
+    'save',
+    'results',
   ];
 
   render(): Promise<string> {
 
     const view =  /*html*/`
-          <h2>Header work</h2>
+          <ul class="header-list">
+            ${this.createNav(this.navList)}
+          </ul>
         `
     return Promise.resolve(view);
   }
@@ -20,6 +21,17 @@ class Header implements PageRenderer {
   after_render(): Promise<void> {
 
     return Promise.resolve();
+  }
+
+  createNav(navList: string[]) {
+    return navList.reduce((nav, item) => {
+      const vuew = `
+      <li class="header-list__item"
+        data-type="${item}">
+          ${item}
+      </li>`;
+      return nav + vuew;
+    }, ``);
   }
 
 }
