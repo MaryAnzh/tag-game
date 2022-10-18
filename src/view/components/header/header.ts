@@ -23,7 +23,7 @@ class Header implements PageRenderer {
     return Promise.resolve();
   }
 
-  createNav(navList: string[]) {
+  createNav(navList: string[]): string {
     return navList.reduce((nav, item) => {
       const vuew = `
       <li class="header-list__item"
