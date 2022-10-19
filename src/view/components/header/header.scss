@@ -1,12 +1,13 @@
 .header-list {
     width: 100%;
+    padding: 0 10px;
     display: flex;
     justify-content: space-between;
 
     &__item {
         padding: 10px 10px;
         color: white;
-        boarder-radius: 4px;
+        border-radius: 4px;
         background: black;
         text-transform: uppercase;
         cursor: pointer;
