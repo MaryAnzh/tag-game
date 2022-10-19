@@ -46,11 +46,13 @@
     }
 
     &__canvas-wrap {
-        max-width: 498px;
         width: 100%;
-        height: 498px;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin: 10px 0;
-        border: 1px solid black;
+        background: rgb(211, 209, 209);
     }
 
     &__board-size {

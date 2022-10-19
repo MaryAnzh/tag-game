@@ -53,5 +53,8 @@ window.addEventListener('hashchange', router);
 // Listen on page load:
 window.addEventListener('load', router);
 
+//слушаем ширину окна и изменяем канвас под нее
+window.addEventListener('resize', () => mainPage.windowOnResize());
+
 //Самооценка
 console.log();

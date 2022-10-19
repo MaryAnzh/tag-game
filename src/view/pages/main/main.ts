@@ -3,7 +3,8 @@ import { PageRenderer } from '../../../model/page-renderer.model';
 class Main implements PageRenderer {
   public currentBoardSize: number = 4;
   public sizeItem: null | NodeListOf<Element> = null;
-
+  public canvas: null | HTMLCanvasElement = null;
+  public canvasWrap: null | HTMLElement = null;
 
   render(): Promise<string> {
     const view =  /*html*/`
@@ -39,7 +40,12 @@ class Main implements PageRenderer {
 
   after_render(): Promise<void> {
     this.sizeItem = document.querySelectorAll('.main-container__size-settings__list__item');
+    this.canvas = document.querySelector('.canvas');
+    this.canvasWrap = document.querySelector('.main-container__canvas-wrap');
+    //const resizeObserver = new ResizeObserver(this.windowOnResize);
+
     this.sizeItem.forEach(el => el.addEventListener('click', (e) => this.changeSizeOnClick(e)));
+    this.windowOnResize();
 
     return Promise.resolve();
   }
@@ -61,6 +67,45 @@ class Main implements PageRenderer {
       ``);
   }
 
+  drawOnCanvas() {
+    const ctx = this.canvas.getContext('2d');
+    const wrapWidth = (this.canvasWrap.clientWidth);
+    const tileWidth = wrapWidth / this.currentBoardSize;
+
+    //рисуем квадраты
+    for (let i = 0; i < this.currentBoardSize; i++) {
+
+      for (let j = 0; j < 8; j++) {
+        ctx.beginPath();
+
+        const x = j * tileWidth; // x coordinate
+        const y = i * tileWidth; // y coordinate
+
+        // if (((i % 2 === 0) !== (j % 2 === 0))) {
+        //   ctx.fillStyle = "red";
+        // }
+        // else {
+        //   ctx.fillStyle = "white";
+        // }
+        ctx.strokeRect(x, y, tileWidth, tileWidth);
+        ctx.fillRect(x, y, tileWidth, tileWidth);
+
+        ctx.fillStyle = 'black';
+        ctx.strokeStyle = 'white';
+        if (i === this.currentBoardSize - 1 && j === this.currentBoardSize - 1) {
+          ctx.clearRect(x, y, tileWidth, tileWidth);
+
+        }
+      }
+    }
+  }
+
+  windowOnResize() {
+    this.canvas.setAttribute('width', this.canvasWrap.clientWidth + "px");
+    this.canvas.setAttribute('height', this.canvasWrap.clientWidth + "px");
+    this.drawOnCanvas();
+  }
+
   changeSizeOnClick(e: Event): void {
     const sizeDesctiption = document.querySelector('.size-view');
     this.sizeItem.forEach(el => el.classList.remove('active'));
@@ -70,7 +115,9 @@ class Main implements PageRenderer {
     elem.classList.add('active');
     this.currentBoardSize = +size;
     sizeDesctiption.innerHTML = `${this.currentBoardSize}x${this.currentBoardSize}`
+    this.windowOnResize();
   }
+
 }
 
 export { Main };
