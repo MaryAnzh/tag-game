@@ -15,23 +15,22 @@
 @import '../../view/pages/not-found/not-found.scss';
 
 * {
-    box-sizing: boarder-box;
+    box-sizing: border-box;
 }
 
 body {
     width: 100%;
-    height: 100vh;
     font-family: 'Roboto';
     font-style: normal;
     display: flex;
     justify-content: center;
-    align-items: center
 }
 
 .wrapper {
     max-width: 500px;
     width: 100%;
     height: fit-content;
+    margin-top: 15%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -46,6 +45,11 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @media (max-width: 500px) {
+        justify-content: flex-end;
+        padding: 10px;
+    }
 }
 
 main {

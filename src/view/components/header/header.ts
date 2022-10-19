@@ -14,6 +14,11 @@ class Header implements PageRenderer {
           <ul class="header-list">
             ${this.createNav(this.navList)}
           </ul>
+          <div class="header-burger">
+            <div class="header-burger__line"></div>
+            <div class="header-burger__line"></div>
+            <div class="header-burger__line"></div>
+          </div>
         `
     return Promise.resolve(view);
   }

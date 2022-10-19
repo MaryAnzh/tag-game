@@ -20,7 +20,9 @@ class Main implements PageRenderer {
         <p>Times: <span>10:20</span></p>
       </div>
       <div class="main-container__canvas-wrap">
-        
+        <canvas class="canvas">
+          Браузер не поддерживает  этот элемент
+        </canvas>
       </div>
       <div class="main-container__board-size">
         <p>Frame size <span class="size-view">${this.currentBoardSize}x${this.currentBoardSize}</span></p>
