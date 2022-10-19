@@ -16,7 +16,7 @@ const stylesHandler = isProduction ? MiniCssExtractPlugin.loader : 'style-loader
 
 const config = {
   entry: {
-    main: './src/index.ts',
+    main: path.resolve(__dirname, 'index.ts'),
   },
   devtool: 'source-map',
   output: {
@@ -33,7 +33,7 @@ const config = {
     new HtmlWebpackPlugin({
       template: './index.html',
       filename: 'index.html',
-      //stylesHandler: 'style.scss',
+      //stylesHandler: './src/assets/style/style.scss',
       favicon: './src/assets/fav.png',
       chunks: ['main'],
       minify: false,
@@ -41,12 +41,12 @@ const config = {
     }),
     new CleanWebpackPlugin(),
     new CopyPlugin({
-        patterns: [
-            {
-                from: path.resolve(__dirname, 'src/assets'),
-                to: path.resolve(__dirname, 'dist/assets')
-            },
-        ],
+      patterns: [
+        {
+          from: path.resolve(__dirname, 'src/assets'),
+          to: path.resolve(__dirname, 'dist/assets')
+        },
+      ],
     }),
   ],
   module: {
