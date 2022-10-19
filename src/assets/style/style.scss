@@ -60,4 +60,9 @@ main {
     width: 100%;
 }
 
+.blocked {
+    opacity: .4;
+    pointer-events: none;
+}
+
 @import './common/common.scss';

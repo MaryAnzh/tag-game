@@ -1,13 +1,21 @@
 import { PageRenderer } from '../../../model/page-renderer.model';
+import { timer } from '../../../services/timer';
 
 class Main implements PageRenderer {
   public currentBoardSize: number = 4;
+  public moves: number = 0;
+  public time: string = '00:00';
+  public timerView: null | HTMLElement = null;
+  public timer: null | NodeJS.Timer = null;
+
   public sizeItem: null | NodeListOf<Element> = null;
   public canvas: null | HTMLCanvasElement = null;
   public canvasWrap: null | HTMLElement = null;
+  public settingButtons: null | NodeListOf<Element> = null;
 
   render(): Promise<string> {
     const view =  /*html*/`
+
     <div class="main-container">
       <div class="main-container__game-settings">
       <div class="main-container__game-settings__setting">
@@ -17,8 +25,8 @@ class Main implements PageRenderer {
           c-2.2,0-4-1.8-4-4s1.8-4,4-4s4,1.8,4,4S34.2,12,32,12z"/>
         </svg>
       </div>
-        <p>Moves: <span>10</span></p>
-        <p>Times: <span>10:20</span></p>
+        <p>Moves: <span>${this.moves}</span></p>
+        <p>Times: <span class="timer-view">${this.time}</span></p>
       </div>
       <div class="main-container__canvas-wrap">
         <canvas class="canvas">
@@ -42,10 +50,15 @@ class Main implements PageRenderer {
     this.sizeItem = document.querySelectorAll('.main-container__size-settings__list__item');
     this.canvas = document.querySelector('.canvas');
     this.canvasWrap = document.querySelector('.main-container__canvas-wrap');
+    this.settingButtons = document.querySelectorAll('.setting-button');
+    this.timerView = document.querySelector('.timer-view');
+
+
     //const resizeObserver = new ResizeObserver(this.windowOnResize);
 
     this.sizeItem.forEach(el => el.addEventListener('click', (e) => this.changeSizeOnClick(e)));
     this.windowOnResize();
+    this.settingButtons.forEach(el => el.addEventListener('click', (e) => this.buttonOnClick(e)));
 
     return Promise.resolve();
   }
@@ -71,30 +84,38 @@ class Main implements PageRenderer {
     const ctx = this.canvas.getContext('2d');
     const wrapWidth = (this.canvasWrap.clientWidth);
     const tileWidth = wrapWidth / this.currentBoardSize;
+    const fontSize = tileWidth / 1.5;
+
+    ctx.font = `${fontSize}px serif`;
+    //const text = ctx.measureText("foo");
+
+    ctx.lineWidth = 4;
+
+    let tileCount = 0;
+    const tileArray = this.createSuffleArr(this.currentBoardSize);
+    tileArray.push(0)
 
     //рисуем квадраты
     for (let i = 0; i < this.currentBoardSize; i++) {
+      for (let j = 0; j < this.currentBoardSize; j++) {
+        //ctx.beginPath();
+        if (!(i === this.currentBoardSize - 1 && j === this.currentBoardSize - 1)) {
+          const x = j * tileWidth; // x coordinate
+          const y = i * tileWidth; // y coordinate
 
-      for (let j = 0; j < 8; j++) {
-        ctx.beginPath();
+          //stroke
+          ctx.strokeStyle = 'white';
+          ctx.strokeRect(x, y, tileWidth, tileWidth);
 
-        const x = j * tileWidth; // x coordinate
-        const y = i * tileWidth; // y coordinate
+          //fill
+          ctx.fillStyle = 'black';
+          ctx.fillRect(x, y, tileWidth, tileWidth);
 
-        // if (((i % 2 === 0) !== (j % 2 === 0))) {
-        //   ctx.fillStyle = "red";
-        // }
-        // else {
-        //   ctx.fillStyle = "white";
-        // }
-        ctx.strokeRect(x, y, tileWidth, tileWidth);
-        ctx.fillRect(x, y, tileWidth, tileWidth);
-
-        ctx.fillStyle = 'black';
-        ctx.strokeStyle = 'white';
-        if (i === this.currentBoardSize - 1 && j === this.currentBoardSize - 1) {
-          ctx.clearRect(x, y, tileWidth, tileWidth);
-
+          //text
+          ctx.textAlign = 'center';
+          ctx.fillStyle = 'white';
+          ctx.fillText(`${tileArray[tileCount] + 1}`, x + tileWidth / 2, y + fontSize);
+          tileCount += 1;
         }
       }
     }
@@ -104,6 +125,34 @@ class Main implements PageRenderer {
     this.canvas.setAttribute('width', this.canvasWrap.clientWidth + "px");
     this.canvas.setAttribute('height', this.canvasWrap.clientWidth + "px");
     this.drawOnCanvas();
+  }
+
+  buttonOnClick(e: Event): void {
+    const elem = <HTMLElement>e.target;
+    const type = elem.dataset.type;
+
+    switch (type) {
+      case 'start': this.staetGame();
+
+        break;
+      case 'save':
+
+        break;
+      case 'stop':
+
+        break;
+      case 'results':
+
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  staetGame() {
+    this.sizeItem.forEach(el => el.classList.add('blocked'));
+    this.timer = timer(this.timerView);
   }
 
   changeSizeOnClick(e: Event): void {
@@ -116,6 +165,12 @@ class Main implements PageRenderer {
     this.currentBoardSize = +size;
     sizeDesctiption.innerHTML = `${this.currentBoardSize}x${this.currentBoardSize}`
     this.windowOnResize();
+  }
+
+  createSuffleArr(num: number): number[] {
+    const arr = [...Array(num * num).keys()];
+    arr.pop();
+    return arr.sort(() => Math.random() - 0.5);
   }
 
 }

@@ -31,7 +31,8 @@ class Header implements PageRenderer {
   createNav(navList: string[]): string {
     return navList.reduce((nav, item) => {
       const vuew = `
-      <li class="header-list__item"
+      <li class="header-list__item setting-button"
+      data-type="${item.split(' ').pop()}";
         data-type="${item}">
           ${item}
       </li>`;
