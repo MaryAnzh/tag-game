@@ -15,7 +15,7 @@
 @import '../../view/pages/not-found/not-found.scss';
 
 * {
-    box-sizing: border-box;
+    box-sizing: boarder-box;
 }
 
 body {
@@ -35,7 +35,6 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border: 1px solid black;
     border-radius: 10px;
     overflow: hidden;
 }

@@ -1,6 +1,9 @@
 import { PageRenderer } from '../../../model/page-renderer.model';
 
 class Main implements PageRenderer {
+  public currentBoardSize: number = 4;
+  public sizeItem: null | NodeListOf<Element> = null;
+
 
   render(): Promise<string> {
     const view =  /*html*/`
@@ -16,16 +19,55 @@ class Main implements PageRenderer {
         <p>Moves: <span>10</span></p>
         <p>Times: <span>10:20</span></p>
       </div>
-      <div class="main-container__canvas-wrap"></div>
-      <div class="main-container__bord-size"></div>
-      <div class="main-container__size-settings"></div>
+      <div class="main-container__canvas-wrap">
+        
+      </div>
+      <div class="main-container__board-size">
+        <p>Frame size <span class="size-view">${this.currentBoardSize}x${this.currentBoardSize}</span></p>
+      </div>
+      <div class="main-container__size-settings">
+        <ul class="main-container__size-settings__list">
+          ${this.createSizeSettingsList(3, 8)}
+        </ul>
+      </div>
     </div>
     `;
     return Promise.resolve(view);
   }
 
   after_render(): Promise<void> {
+    this.sizeItem = document.querySelectorAll('.main-container__size-settings__list__item');
+    this.sizeItem.forEach(el => el.addEventListener('click', (e) => this.changeSizeOnClick(e)));
+
     return Promise.resolve();
+  }
+
+  createSizeSettingsList(start: number, end: number): string {
+    const arr = [...Array(end - start + 1).keys()];
+
+    return arr.reduce((str, num) => {
+      const size = num + start;
+      const activeClass = size === this.currentBoardSize ? ' active' : '';
+      const vuew = `
+      <li
+      class="main-container__size-settings__list__item${activeClass}"
+      data-size="${size}">
+        ${size}x${size}
+      </li>`
+      return str + vuew;
+    },
+      ``);
+  }
+
+  changeSizeOnClick(e: Event): void {
+    const sizeDesctiption = document.querySelector('.size-view');
+    this.sizeItem.forEach(el => el.classList.remove('active'));
+
+    const elem = <HTMLElement>e.target;
+    const size = elem.dataset.size;
+    elem.classList.add('active');
+    this.currentBoardSize = +size;
+    sizeDesctiption.innerHTML = `${this.currentBoardSize}x${this.currentBoardSize}`
   }
 }
 
