@@ -1,4 +1,5 @@
 import { PageRenderer } from '../../../model/page-renderer.model';
+import { timer } from '../../../services/timer';
 
 class Header implements PageRenderer {
   public navList: string[] = [
@@ -30,8 +31,9 @@ class Header implements PageRenderer {
 
   createNav(navList: string[]): string {
     return navList.reduce((nav, item) => {
+      const block = item === 'stop' || item === 'save' ? 'blocked' : '';
       const vuew = `
-      <li class="header-list__item setting-button"
+      <li class="header-list__item setting-button ${block}"
       data-type="${item.split(' ').pop()}";
         data-type="${item}">
           ${item}

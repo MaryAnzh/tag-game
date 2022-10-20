@@ -4,20 +4,35 @@ import { timer } from '../../../services/timer';
 class Main implements PageRenderer {
   public currentBoardSize: number = 4;
   public moves: number = 0;
+
   public time: string = '00:00';
   public timerView: null | HTMLElement = null;
   public timer: null | NodeJS.Timer = null;
+  public isTimerStart: boolean = false;
 
   public sizeItem: null | NodeListOf<Element> = null;
   public canvas: null | HTMLCanvasElement = null;
   public canvasWrap: null | HTMLElement = null;
   public settingButtons: null | NodeListOf<Element> = null;
 
+  public confirm: null | HTMLElement = null;
+  public confirmText = 'Do you want to finish this game?';
+  public confirmButtons: null | NodeListOf<Element> = null;
+
   render(): Promise<string> {
     const view =  /*html*/`
-
     <div class="main-container">
-      <div class="main-container__game-settings">
+    <div class="confirm">
+      <div class="confirm__mas">
+        <p>${this.confirmText}</p>
+        <div class="confirm__mas__buttons">
+        <button class="confirm__mas__buttons__button" data-type="yes">Yes</butoon>
+        <button class="confirm__mas__buttons__button" data-type="no">No</butoon>
+        </div>
+      </div>
+    </div>
+  
+    <div class="main-container__game-settings">
       <div class="main-container__game-settings__setting">
         <svg viewBox="24 0 16 16">
           <path d="M40,9.5v-3h-1.8l-0.7-1.8l1.3-1.3l-2.1-2.1l-1.3,1.3l-1.9-0.8V0h-3v1.8l-1.8,0.8l-1.3-1.3l-2.1,2.1l1.3,1.3
@@ -52,13 +67,14 @@ class Main implements PageRenderer {
     this.canvasWrap = document.querySelector('.main-container__canvas-wrap');
     this.settingButtons = document.querySelectorAll('.setting-button');
     this.timerView = document.querySelector('.timer-view');
-
-
+    this.confirm = document.querySelector('.confirm');
+    this.confirmButtons = document.querySelectorAll('.confirm__mas__buttons__button');
     //const resizeObserver = new ResizeObserver(this.windowOnResize);
 
     this.sizeItem.forEach(el => el.addEventListener('click', (e) => this.changeSizeOnClick(e)));
     this.windowOnResize();
     this.settingButtons.forEach(el => el.addEventListener('click', (e) => this.buttonOnClick(e)));
+    this.confirmButtons.forEach((el) => el.addEventListener('click', (e) => this.confirmOnClick(e)));
 
     return Promise.resolve();
   }
@@ -132,13 +148,13 @@ class Main implements PageRenderer {
     const type = elem.dataset.type;
 
     switch (type) {
-      case 'start': this.staetGame();
+      case 'start': this.startGame();
 
         break;
       case 'save':
 
         break;
-      case 'stop':
+      case 'stop': this.stopGame();
 
         break;
       case 'results':
@@ -150,10 +166,53 @@ class Main implements PageRenderer {
     }
   }
 
-  staetGame() {
+  startGame(): void {
     this.sizeItem.forEach(el => el.classList.add('blocked'));
-    this.timer = timer(this.timerView);
+    this.settingButtons.forEach(el => el.classList.remove('blocked'));
+    this.timer = timer(this.timerView, 0, 0, 0);
+    this.isTimerStart = true;
   }
+
+  stopGame() {
+    clearTimeout(this.timer);
+    this.confirm.style.display = 'flex';
+
+    // if (!this.isTimerStart) {
+
+    //   const sec = this.timerView.dataset.sec ? +this.timerView.dataset.sec : 0;
+    //   const min = this.timerView.dataset.min ? +this.timerView.dataset.min : 0;
+    //   const hour = this.timerView.dataset.hour ? +this.timerView.dataset.hour : 0;
+    //   this.timer = timer(this.timerView, sec, min, hour);
+    // }
+    this.isTimerStart = !this.isTimerStart;
+  }
+
+  confirmOnClick(e: Event): void {
+    const elem = <HTMLElement>e.target;
+    const type = elem.dataset.type;
+    if (type === 'yes') {
+      this.timerView.textContent = '00:00';
+      this.sizeItem.forEach(el => el.classList.remove('blocked'));
+      this.settingButtons[1].classList.add('blocked');
+      this.settingButtons[2].classList.add('blocked');
+      this.confirm.style.display = 'none';
+      this.timerView.removeAttribute('data-sec');
+      this.timerView.removeAttribute('data-min');
+      this.timerView.removeAttribute('data-hour');
+
+
+    }
+
+    if (type === 'no') {
+      this.confirm.style.display = 'none';
+      const sec = this.timerView.dataset.sec ? +this.timerView.dataset.sec : 0;
+      const min = this.timerView.dataset.min ? +this.timerView.dataset.min : 0;
+      const hour = this.timerView.dataset.hour ? +this.timerView.dataset.hour : 0;
+      this.timer = timer(this.timerView, sec, min, hour);
+    }
+
+  }
+
 
   changeSizeOnClick(e: Event): void {
     const sizeDesctiption = document.querySelector('.size-view');
