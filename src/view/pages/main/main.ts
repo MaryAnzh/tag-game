@@ -235,3 +235,37 @@ class Main implements PageRenderer {
 }
 
 export { Main };
+
+emptyTileNeighbors() {
+  //const neighbors = {};
+
+  const emptyTileX = this.tiles[this.emptyTileIndex].x;
+  const emptyTileY = this.tiles[this.emptyTileIndex].y;
+  console.log(emptyTileX, emptyTileY);
+
+  // const topNX = emptyTileX;
+  // const topNY = emptyTileY - this.tileWidth;
+  // if (topNX >= 0 && topNY >= 0) {
+  //     neighbors.topN = [topNX, topNY];
+  // }
+
+  // const bottomNX = emptyTileX;
+  // const bottomNY = emptyTileY + this.tileWidth;
+  // if (bottomNX >= 0 && bottomNY >= 0) {
+  //     neighbors.bottomN = [bottomNX, bottomNY];
+  // }
+
+  // const leftNX = emptyTileX - this.tileWidth;
+  // const leftNY = emptyTileY;
+  // if (leftNX >= 0 && leftNY >= 0) {
+  //     neighbors.leftNX = [leftNX, leftNY];
+  // }
+
+  // const rightNX = emptyTileX + this.tileWidth;
+  // const rughtNY = emptyTileY;
+  // if (rightNX >= 0 && rughtNY >= 0) {
+  //     neighbors.rightN = [rightNX, rughtNY];
+  // }
+
+  return neighbors;
+}
