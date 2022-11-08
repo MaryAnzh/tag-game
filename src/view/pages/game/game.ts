@@ -1,5 +1,5 @@
-export class NotFoundPage {
-    name = 'not-found-page';
+export class GamePage {
+    name = 'game-page';
     wrapper = document.createElement('div');
 
     constructor() {
