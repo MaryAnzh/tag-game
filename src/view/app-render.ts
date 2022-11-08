@@ -7,7 +7,7 @@ export class AppRender {
     wrapper: HTMLDivElement = document.createElement('div');
     main: HTMLElement = document.createElement('main');
     header: Header = new Header();
-    footer: Footer = new Footer(); s
+    footer: Footer = new Footer();
 
     constructor() {
         this.wrapper.classList.add('wraooer');

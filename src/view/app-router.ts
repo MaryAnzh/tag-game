@@ -2,7 +2,7 @@
 
 export class AppRouter {
 
-    private _modules = {
+    public modules = {
         HomePage: () => import('./pages/home/home'),
         GamePage: () => import('./pages/game/game'),
     }
@@ -10,7 +10,7 @@ export class AppRouter {
     constructor() {
     }
 
-    static getModules() {
-        return this._modules;
+    getModules() {
+        return this.modules;
     }
 };

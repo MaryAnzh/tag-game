@@ -10,9 +10,7 @@
 @import './utils/reset.scss';
 @import './utils/vareable';
 
-@import '../../view/components/header/header.scss';
-@import '../../view/pages/main/main.scss';
-@import '../../view/pages/not-found/not-found.scss';
+@import '../../view/app-style.scss';
 
 * {
     box-sizing: border-box;
